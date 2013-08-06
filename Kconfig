@@ -1,0 +1,10 @@
+# @LICENSE(NICTA_CORE)
+
+menuconfig LIB_SEL4_TIME
+    bool "Build sel4time"
+    depends on LIB_SEL4 && HAVE_LIBC
+    select HAVE_SEL4_LIBS
+    default y
+    help
+        Library for interacting with the time manager app that implements split and revoke semantics.
+
