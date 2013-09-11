@@ -9,6 +9,7 @@
 #include <sched/client.h>
 
 #include <vka/vka.h>
+#include <vka/capops.h>
 
 int
 sched_client_split(seL4_CPtr endpoint, int parent, seL4_SchedParams params, cspacepath_t dest) 
@@ -73,6 +74,11 @@ sched_client_revoke(seL4_CPtr endpoint, int parent)
 void
 sched_client_free(vka_t *vka, sched_t *sched)
 {
+    /* first delete the cap */
+    cspacepath_t path;
+    vka_cspace_make_path(vka, sched->cptr, &path);
+    vka_cnode_delete(&path);
+
     vka_cspace_free(vka, sched->cptr);
     free(sched);
 }
