@@ -27,8 +27,8 @@ typedef struct sched {
 static inline void sched_print_params(seL4_SchedParams params) 
 {
     LOG_INFO("p: %llu\t", params.period);
-    LOG_INFO("e: %llu\t", params.relativeDeadline);
-    LOG_INFO("d: %llu\t", params.execution);
+    LOG_INFO("d: %llu\t", params.relativeDeadline);
+    LOG_INFO("e: %llu\t", params.execution);
     LOG_INFO("cbs: %s\n", params.cbs == seL4_HardCBS ? "Hard" : "Soft");
 }
 #else
@@ -53,8 +53,8 @@ sched_copy_from_buffer(seL4_SchedParams *params, int *parent)
 {
     *parent = seL4_GetMR(0);
     params->period = ((uint64_t) seL4_GetMR(1) << 32) + seL4_GetMR(2);
-    params->execution = ((uint64_t) seL4_GetMR(1) << 32) + seL4_GetMR(2);
-    params->relativeDeadline = ((uint64_t) seL4_GetMR(1) << 32) + seL4_GetMR(2);
+    params->execution = ((uint64_t) seL4_GetMR(3) << 32) + seL4_GetMR(4);
+    params->relativeDeadline = ((uint64_t) seL4_GetMR(5) << 32) + seL4_GetMR(6);
     params->cbs = seL4_GetMR(7);
 }
 
