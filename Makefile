@@ -1,7 +1,7 @@
 # @LICENSE(NICTA_CORE) 
 
 # Targets
-TARGETS := libsel4time.a
+TARGETS := libsel4sched.a
 
 # Source files required to build the target
 CFILES := $(patsubst $(SOURCE_DIR)/%,%,$(wildcard $(SOURCE_DIR)/src/*.c))
