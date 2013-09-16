@@ -47,8 +47,9 @@ sched_t *sched_client_alloc_split(vka_t *vka, seL4_CPtr endpoint,
  * 
  * @param endpoint the endpoint to talk to the manager
  * @param parent the id of the parent reservation to revoke
+ * @return 0 on success
  */
-void sched_client_revoke(seL4_CPtr endpoint, int parent);
+int sched_client_revoke(seL4_CPtr endpoint, int parent);
 
 /** 
  * Free the objects allocaed by alloc_and_split_sched. 

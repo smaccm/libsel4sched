@@ -59,7 +59,7 @@ sched_client_alloc_split(vka_t *vka, seL4_CPtr endpoint, int32_t parent, seL4_Sc
     return sched;
 }
     
-void
+int
 sched_client_revoke(seL4_CPtr endpoint, int parent) 
 {
     /* make revoke call to manager */
@@ -67,8 +67,7 @@ sched_client_revoke(seL4_CPtr endpoint, int parent)
     seL4_SetMR(0, parent);
 
     seL4_Call(endpoint, message);
-    int result = seL4_GetMR(0);
-    assert(result == 0);
+    return seL4_GetMR(0);
 }
 
 void
