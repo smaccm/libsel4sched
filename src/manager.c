@@ -5,8 +5,6 @@
 #include <sel4utils/process.h>
 #include <sched/manager.h>
 
-#include <debug/debug.h>
-
 #include <vka/vka.h>
 #include <vspace/vspace.h>
 
