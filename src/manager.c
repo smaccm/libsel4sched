@@ -5,12 +5,14 @@
 #include <sel4utils/process.h>
 #include <sched/manager.h>
 
+#include <debug/debug.h>
+
 #include <vka/vka.h>
 #include <vspace/vspace.h>
 
 seL4_CPtr  
-start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr untyped,
-        uint8_t untyped_size, uint8_t priority)
+start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace, 
+        seL4_CapData_t cap_data, uint8_t untyped_size, uint8_t priority)
 {
 
     sel4utils_process_t process;
@@ -24,25 +26,39 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr untyped,
     assert(sched_control == MANAGER_SCHED_CONTROL);
 
     /* copy an untyped to the time manager */
-    vka_cspace_make_path(vka, untyped, &src);
+    /* create an untyped of the right size and copy to manager */
+    vka_object_t untyped = {0};
+    error = vka_alloc_untyped(vka, untyped_size, &untyped);
+    assert(error == 0);
+
+    vka_cspace_make_path(vka, untyped.cptr, &src);
     seL4_CPtr untyped_cap = sel4utils_copy_cap_to_process(&process, src);
     assert(untyped_cap == MANAGER_UNTYPED);
 
-    /* copy the root cnode of the time managers cspace to the time manager */
-    vka_cspace_make_path(vka, process.cspace.cptr, &src);
-    seL4_CPtr cnode = sel4utils_copy_cap_to_process(&process, src);
-    assert(cnode == MANAGER_ROOT_CNODE);
-
+    /* copy an enpoint to the time manager */
+    vka_object_t endpoint = {0};
+    error = vka_alloc_endpoint(vka, &endpoint);
+    assert(error == 0);
+    vka_cspace_make_path(vka, endpoint.cptr, &src);
+    seL4_CPtr endpoint_cap = sel4utils_copy_cap_to_process(&process, src);
+    assert(endpoint_cap == MANAGER_ENDPOINT);
+    
     /* start: passing the size of the untyped given to the manager as an argument */
     char size[100];
     snprintf(size, 100, "%u", untyped_size);
     char *argv[1];
     argv[0] = size;
-    sel4utils_spawn_process(&process, vka, vspace, 1, argv, 1);
+    error = sel4utils_spawn_process(&process, vka, vspace, 1, argv, 1);
+    assert(error == 0);
+
+    sel4utils_thread_t thread;
+    error = sel4utils_start_fault_handler(process.fault_endpoint.cptr, vka, vspace,
+            MAX_PRIO, cspace, cap_data, "time-manager", &thread);
+    assert(error == 0);
 
     error = seL4_TCB_SetPriority(seL4_CapInitThreadTCB, priority);
     assert(error == seL4_NoError);
 
-    return process.fault_endpoint.cptr;
+    return endpoint.cptr;
 }
 
