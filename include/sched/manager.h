@@ -26,6 +26,6 @@ enum {
  * @return a cptr in the current cspace to talk to the manager on.
  */
 seL4_CPtr start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace, 
-        seL4_CapData_t data, uint8_t untyped_size, uint8_t priority);
+        seL4_CapData_t data, uint8_t untyped_size, uint8_t priority, uint32_t timer_period_fs);
 
 #endif /* TIME_MANAGER_H */

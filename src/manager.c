@@ -4,18 +4,21 @@
 #include <sel4/sel4.h>
 #include <sel4utils/process.h>
 #include <sched/manager.h>
+#include <sched/sched.h>
 
 #include <vka/vka.h>
 #include <vspace/vspace.h>
 
 seL4_CPtr  
 start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace, 
-        seL4_CapData_t cap_data, uint8_t untyped_size, uint8_t priority)
+        seL4_CapData_t cap_data, uint8_t untyped_size, uint8_t priority, uint32_t timer_period_fs)
 {
 
     sel4utils_process_t process;
     int error = sel4utils_configure_process(&process, vka, vspace, MAX_PRIO, "time-manager");
     assert(error == 0);
+
+    sched_set_timer_period(timer_period_fs);
 
     /* copy the init sched_control cap into the addres space */
     cspacepath_t src;
@@ -44,9 +47,12 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     /* start: passing the size of the untyped given to the manager as an argument */
     char size[100];
     snprintf(size, 100, "%u", untyped_size);
-    char *argv[1];
+    char timer_period[100];
+    snprintf(timer_period, 100, "%u", timer_period_fs);
+    char *argv[2];
     argv[0] = size;
-    error = sel4utils_spawn_process(&process, vka, vspace, 1, argv, 1);
+    argv[1] = timer_period;
+    error = sel4utils_spawn_process(&process, vka, vspace, 2, argv, 1);
     assert(error == 0);
 
     sel4utils_thread_t thread;
