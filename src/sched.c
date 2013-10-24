@@ -20,14 +20,10 @@ sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context
                 seL4_SchedParams params, bool bindable)
 {
 
-    printf("params: us\n");
-    sched_print_params(params);
     /* convert params from ms to ticks */
     params.period = (uint64_t) roundl((long double) params.period / sched_period);
     params.relativeDeadline = (uint64_t) roundl((long double) params.relativeDeadline / sched_period);
     params.execution = (uint64_t) roundl((long double) params.execution / sched_period);
-    printf("params: ticks\n");
-    sched_print_params(params);
 
     return seL4_SchedControl_Configure(sched_control, sched_context, params.period ,
         params.relativeDeadline, params.execution,
