@@ -6,8 +6,8 @@
 
 static uint32_t ticks_per_ms;
 
-void 
-sched_set_timer_khz(uint32_t freq) 
+void
+sched_set_timer_khz(uint32_t freq)
 {
 
     ticks_per_ms = period;
@@ -31,13 +31,13 @@ sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context
 
     /* leave params as ms */
     return seL4_SchedControl_Configure(sched_control, sched_context, params.period ,
-        params.relativeDeadline, params.execution,
-        params.relativeDeadline / params.period, params.cbs, bindable);
+            params.relativeDeadline, params.execution,
+            params.relativeDeadline / params.period, params.cbs, bindable);
 }
 
 vka_object_t
 sched_alloc_configure(seL4_SchedControl sched_control, vka_t *vka, seL4_SchedParams params,
-        bool bindable) 
+        bool bindable)
 {
     vka_object_t sc = {0};
 

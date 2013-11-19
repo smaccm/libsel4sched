@@ -12,7 +12,7 @@
 #include <vka/capops.h>
 
 int
-sched_client_split(seL4_CPtr endpoint, int parent, seL4_SchedParams params, cspacepath_t dest) 
+sched_client_split(seL4_CPtr endpoint, int parent, seL4_SchedParams params, cspacepath_t dest)
 {
     /* put the path to the cslot into the ipc buffer */
     seL4_SetCapReceivePath(dest.root, dest.capPtr, dest.capDepth);
@@ -22,7 +22,7 @@ sched_client_split(seL4_CPtr endpoint, int parent, seL4_SchedParams params, cspa
 
     /* make the call */
     seL4_MessageInfo_t info = seL4_MessageInfo_new(Split, 0, 0, NUM_SPLIT_ARGS);
-   
+
     seL4_Call(endpoint, info);
 
     /* return the child ID */
@@ -47,20 +47,20 @@ sched_client_alloc_split(vka_t *vka, seL4_CPtr endpoint, int32_t parent, seL4_Sc
 
     cspacepath_t path;
     vka_cspace_make_path(vka, sched->cptr, &path);
-    
+
     sched->id = sched_client_split(endpoint , parent, params, path);
-    
+
     if (sched->id == -1) {
         vka_cspace_free(vka, sched->cptr);
         free(sched);
         return NULL;
-    } 
+    }
 
     return sched;
 }
-    
+
 int
-sched_client_revoke(seL4_CPtr endpoint, int parent) 
+sched_client_revoke(seL4_CPtr endpoint, int parent)
 {
     /* make revoke call to manager */
     seL4_MessageInfo_t message = seL4_MessageInfo_new(Revoke, 0, 0, NUM_REVOKE_ARGS);

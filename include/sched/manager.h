@@ -17,7 +17,7 @@ enum {
 
 
 /* Start the time manager.
- * 
+ *
  * @param untyped_size size of the untyped
  * @param priority priority to run the manager at
  * @param cspace the current cspace (to start the managers fault handler in)
@@ -26,7 +26,7 @@ enum {
  *
  * @return a cptr in the current cspace to talk to the manager on.
  */
-seL4_CPtr start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace, 
+seL4_CPtr start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
         seL4_CapData_t data, uint8_t untyped_size, uint8_t priority, uint32_t timer_freq);
 
 #endif /* TIME_MANAGER_H */

@@ -24,7 +24,7 @@ typedef struct sched {
 #define ODIN 1
 
 #ifdef CONFIG_DEBUG_BUILD
-static inline void sched_print_params(seL4_SchedParams params) 
+static inline void sched_print_params(seL4_SchedParams params)
 {
     LOG_INFO("p: %llu\t", params.period);
     LOG_INFO("d: %llu\t", params.relativeDeadline);
@@ -32,14 +32,14 @@ static inline void sched_print_params(seL4_SchedParams params)
     LOG_INFO("cbs: %s\n", params.cbs == seL4_HardCBS ? "Hard" : "Soft");
 }
 #else
-#define sched_print_params(x) 
-#endif 
+#define sched_print_params(x)
+#endif
 
 /* define the timer frequency in khz. This value is taken from bootinfo */
 void sched_set_timer_khz(uint32_t freq);
 
-static inline void 
-sched_copy_to_buffer(seL4_SchedParams params, int parent) 
+static inline void
+sched_copy_to_buffer(seL4_SchedParams params, int parent)
 {
     seL4_SetMR(0, parent);
     seL4_SetMR(1, (uint32_t) (params.period >> 32));
@@ -51,7 +51,7 @@ sched_copy_to_buffer(seL4_SchedParams params, int parent)
     seL4_SetMR(7, params.cbs);
 }
 
-static inline void 
+static inline void
 sched_copy_from_buffer(seL4_SchedParams *params, int *parent)
 {
     *parent = seL4_GetMR(0);
@@ -63,22 +63,22 @@ sched_copy_from_buffer(seL4_SchedParams *params, int *parent)
 
 
 static inline seL4_SchedParams
-sched_create_params(uint64_t period, uint64_t relative_deadline, uint64_t execution, seL4_CBS cbs) 
+sched_create_params(uint64_t period, uint64_t relative_deadline, uint64_t execution, seL4_CBS cbs)
 {
     return (seL4_SchedParams) {
         .period = period,
-        .relativeDeadline = relative_deadline,
-        .execution = execution,
-        .cbs = cbs
+         .relativeDeadline = relative_deadline,
+          .execution = execution,
+           .cbs = cbs
     };
 }
 
-vka_object_t sched_alloc_configure(seL4_SchedControl sched_control, vka_t  *vka, seL4_SchedParams params, 
+vka_object_t sched_alloc_configure(seL4_SchedControl sched_control, vka_t  *vka, seL4_SchedParams params,
         bool bindable);
 
 /* Call seL4_SchedControl_Configure, converting the params in seL4_SchedParams from microseconds
  * to ticks */
-int sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context, 
-        seL4_SchedParams params, bool bindable);
+int sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context,
+                    seL4_SchedParams params, bool bindable);
 
 #endif /* SCHED_H */

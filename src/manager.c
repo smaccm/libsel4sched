@@ -9,9 +9,9 @@
 #include <vka/vka.h>
 #include <vspace/vspace.h>
 
-seL4_CPtr  
-start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace, 
-        seL4_CapData_t cap_data, uint8_t untyped_size, uint8_t priority, uint32_t timer_period_freq)
+seL4_CPtr
+start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
+                   seL4_CapData_t cap_data, uint8_t untyped_size, uint8_t priority, uint32_t timer_period_freq)
 {
 
     sel4utils_process_t process;
@@ -43,7 +43,7 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     vka_cspace_make_path(vka, endpoint.cptr, &src);
     seL4_CPtr endpoint_cap = sel4utils_copy_cap_to_process(&process, src);
     assert(endpoint_cap == MANAGER_ENDPOINT);
-    
+
     /* start: passing the size of the untyped given to the manager as an argument */
     char size[100];
     snprintf(size, 100, "%u", untyped_size);
