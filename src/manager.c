@@ -11,14 +11,14 @@
 
 seL4_CPtr  
 start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace, 
-        seL4_CapData_t cap_data, uint8_t untyped_size, uint8_t priority, uint32_t timer_period_fs)
+        seL4_CapData_t cap_data, uint8_t untyped_size, uint8_t priority, uint32_t timer_period_freq)
 {
 
     sel4utils_process_t process;
     int error = sel4utils_configure_process(&process, vka, vspace, MAX_PRIO, "time-manager");
     assert(error == 0);
 
-    sched_set_timer_period(timer_period_fs);
+    sched_set_timer_khz(timer_freq);
 
     /* copy the init sched_control cap into the addres space */
     cspacepath_t src;

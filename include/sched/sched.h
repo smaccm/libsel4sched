@@ -35,8 +35,8 @@ static inline void sched_print_params(seL4_SchedParams params)
 #define sched_print_params(x) 
 #endif 
 
-/* define the tick period in femptoseconds. This value is taken from bootinfo */
-void sched_set_timer_period(uint32_t freq);
+/* define the timer frequency in khz. This value is taken from bootinfo */
+void sched_set_timer_khz(uint32_t freq);
 
 static inline void 
 sched_copy_to_buffer(seL4_SchedParams params, int parent) 
