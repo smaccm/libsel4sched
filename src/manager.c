@@ -11,7 +11,7 @@
 
 seL4_CPtr
 start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
-                   seL4_CapData_t cap_data, uint8_t untyped_size, uint8_t priority, uint32_t timer_period_freq)
+                   seL4_CapData_t cap_data, uint8_t untyped_size, uint8_t priority, uint32_t timer_freq)
 {
 
     sel4utils_process_t process;
@@ -48,7 +48,7 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     char size[100];
     snprintf(size, 100, "%u", untyped_size);
     char timer_period[100];
-    snprintf(timer_period, 100, "%u", timer_period_fs);
+    snprintf(timer_period, 100, "%u", timer_freq);
     char *argv[2];
     argv[0] = size;
     argv[1] = timer_period;

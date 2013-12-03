@@ -10,7 +10,7 @@ void
 sched_set_timer_khz(uint32_t freq)
 {
 
-    ticks_per_ms = period;
+    ticks_per_ms = freq;
     printf("Ticks_per_ms = %u\n", ticks_per_ms);
     assert(ticks_per_ms > 0);
 }
