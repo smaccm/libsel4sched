@@ -45,8 +45,11 @@ sched_alloc_configure(seL4_SchedControl sched_control, vka_t *vka, seL4_SchedPar
     assert(error == 0);
 
     error = sched_configure(sched_control, sc.cptr, params, bindable);
-    LOG_ERROR("Sched_configure failed with error %d\n", error);
-    assert(error == 0);
+    
+    if (error != 0) {
+        LOG_ERROR("Sched_configure failed with error %d\n", error);
+        assert(error == 0);
+    }
 
     return sc;
 }
