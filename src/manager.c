@@ -15,7 +15,7 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
 {
 
     sel4utils_process_t process;
-    int error = sel4utils_configure_process(&process, vka, vspace, MAX_PRIO, "time-manager");
+    UNUSED int error = sel4utils_configure_process(&process, vka, vspace, MAX_PRIO, "time-manager");
     assert(error == 0);
 
     sched_set_timer_khz(timer_freq);
@@ -23,7 +23,7 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     /* copy the init sched_control cap into the addres space */
     cspacepath_t src;
     vka_cspace_make_path(vka, seL4_CapSchedControl, &src);
-    seL4_CPtr sched_control = sel4utils_copy_cap_to_process(&process, src);
+    UNUSED seL4_CPtr sched_control = sel4utils_copy_cap_to_process(&process, src);
     assert(sched_control == MANAGER_SCHED_CONTROL);
 
     /* copy an untyped to the time manager */
@@ -33,7 +33,7 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     assert(error == 0);
 
     vka_cspace_make_path(vka, untyped.cptr, &src);
-    seL4_CPtr untyped_cap = sel4utils_copy_cap_to_process(&process, src);
+    UNUSED seL4_CPtr untyped_cap = sel4utils_copy_cap_to_process(&process, src);
     assert(untyped_cap == MANAGER_UNTYPED);
 
     /* copy an enpoint to the time manager */
@@ -41,7 +41,8 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     error = vka_alloc_endpoint(vka, &endpoint);
     assert(error == 0);
     vka_cspace_make_path(vka, endpoint.cptr, &src);
-    seL4_CPtr endpoint_cap = sel4utils_copy_cap_to_process(&process, src);
+    
+    UNUSED seL4_CPtr endpoint_cap = sel4utils_copy_cap_to_process(&process, src);
     assert(endpoint_cap == MANAGER_ENDPOINT);
 
     /* start: passing the size of the untyped given to the manager as an argument */
