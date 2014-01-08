@@ -11,14 +11,14 @@
 
 seL4_CPtr
 start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
-                   seL4_CapData_t cap_data, uint8_t untyped_size, uint8_t priority, uint32_t timer_freq)
+                   seL4_CapData_t cap_data, uint32_t untyped_size, uint8_t priority, uint32_t timer_khz)
 {
 
     sel4utils_process_t process;
     UNUSED int error = sel4utils_configure_process(&process, vka, vspace, MAX_PRIO, "time-manager");
     assert(error == 0);
 
-    sched_set_timer_khz(timer_freq);
+    sched_set_timer_khz(timer_khz);
 
     /* copy the init sched_control cap into the addres space */
     cspacepath_t src;
@@ -49,7 +49,7 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     char size[100];
     snprintf(size, 100, "%u", untyped_size);
     char timer_period[100];
-    snprintf(timer_period, 100, "%u", timer_freq);
+    snprintf(timer_period, 100, "%u", timer_khz);
     char *argv[2];
     argv[0] = size;
     argv[1] = timer_period;

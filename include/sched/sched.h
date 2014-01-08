@@ -39,9 +39,9 @@ static inline void sched_print_params(seL4_SchedParams params)
 void sched_set_timer_khz(uint32_t freq);
 
 static inline void
-sched_copy_to_buffer(seL4_SchedParams params, int parent)
+sched_copy_to_buffer(seL4_SchedParams params, int id)
 {
-    seL4_SetMR(0, parent);
+    seL4_SetMR(0, id);
     seL4_SetMR(1, (uint32_t) (params.period >> 32));
     seL4_SetMR(2, (uint32_t) params.period);
     seL4_SetMR(3, (uint32_t) (params.execution >> 32));
@@ -52,9 +52,9 @@ sched_copy_to_buffer(seL4_SchedParams params, int parent)
 }
 
 static inline void
-sched_copy_from_buffer(seL4_SchedParams *params, int *parent)
+sched_copy_from_buffer(seL4_SchedParams *params, int *id)
 {
-    *parent = seL4_GetMR(0);
+    *id = seL4_GetMR(0);
     params->period = ((uint64_t) seL4_GetMR(1) << 32) + seL4_GetMR(2);
     params->execution = ((uint64_t) seL4_GetMR(3) << 32) + seL4_GetMR(4);
     params->relativeDeadline = ((uint64_t) seL4_GetMR(5) << 32) + seL4_GetMR(6);
