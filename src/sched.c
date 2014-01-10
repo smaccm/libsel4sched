@@ -4,26 +4,22 @@
 
 #include <vka/vka.h>
 
-static uint32_t ticks_per_ms;
+int
+sched_configure_khz(seL4_SchedControl sched_control, seL4_SchedContext sched_context,
+                seL4_SchedParams params, bool bindable, uint32_t khz) {
+ 
+    params.period = (uint64_t) params.period * khz;
+    params.relativeDeadline = params.relativeDeadline * khz;
+    params.execution = params.execution * khz;
 
-void
-sched_set_timer_khz(uint32_t freq)
-{
-
-    ticks_per_ms = freq;
-    printf("Ticks_per_ms = %u\n", ticks_per_ms);
-    assert(ticks_per_ms > 0);
+    return sched_configure(sched_control, sched_context, params, bindable);
 }
+
 
 int
 sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context,
                 seL4_SchedParams params, bool bindable)
 {
-    /* TODO this may not be neccessary as we can multiply in kernel. */
-    params.period = (uint64_t) params.period * ticks_per_ms;
-    params.relativeDeadline = params.relativeDeadline * ticks_per_ms;
-    params.execution = params.execution * ticks_per_ms;
-
     if (params.period == 0) {
         LOG_ERROR("Period must be > 0\n");
         return seL4_InvalidArgument;
