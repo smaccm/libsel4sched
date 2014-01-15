@@ -5,18 +5,6 @@
 #include <vka/vka.h>
 
 int
-sched_configure_khz(seL4_SchedControl sched_control, seL4_SchedContext sched_context,
-                seL4_SchedParams params, bool bindable, uint32_t khz) {
- 
-    params.period = (uint64_t) params.period * khz;
-    params.relativeDeadline = params.relativeDeadline * khz;
-    params.execution = params.execution * khz;
-
-    return sched_configure(sched_control, sched_context, params, bindable);
-}
-
-
-int
 sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context,
                 seL4_SchedParams params, bool bindable)
 {
