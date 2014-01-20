@@ -73,14 +73,13 @@ sched_create_params(uint64_t period, uint64_t relative_deadline, uint64_t execut
     };
 }
 
-vka_object_t sched_alloc_configure(seL4_SchedControl sched_control, vka_t  *vka, seL4_SchedParams params,
-        bool bindable);
+vka_object_t sched_alloc_configure(seL4_SchedControl sched_control, vka_t  *vka, seL4_SchedParams params);
 
 /* Call seL4_SchedControl_Configure */
 int sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context,
-                    seL4_SchedParams params, bool bindable);
+                    seL4_SchedParams params);
 
 /* Call seL4_SchedControl_Configure, multiply all params by khz (params assumed to be is milliseconds) */
 int sched_configure_khz(seL4_SchedControl sched_control, seL4_SchedContext sched_context,
-                    seL4_SchedParams params, bool bindable, uint32_t khz);
+                    seL4_SchedParams params, uint32_t khz);
 #endif /* SCHED_H */
