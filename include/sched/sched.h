@@ -63,13 +63,15 @@ sched_copy_from_buffer(seL4_SchedParams *params, int *id)
 
 
 static inline seL4_SchedParams
-sched_create_params(uint64_t period, uint64_t relative_deadline, uint64_t execution, seL4_CBS cbs)
+sched_create_params(uint64_t period, uint64_t relative_deadline, uint64_t execution, seL4_CBS cbs,
+        seL4_TaskType trigger)
 {
     return (seL4_SchedParams) {
         .period = period,
-         .relativeDeadline = relative_deadline,
-          .execution = execution,
-           .cbs = cbs
+        .relativeDeadline = relative_deadline,
+        .execution = execution,
+        .cbs = cbs,
+        .trigger = trigger
     };
 }
 
