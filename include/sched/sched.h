@@ -19,7 +19,7 @@ typedef struct sched {
     seL4_CPtr cptr;
 } sched_t;
 
-#define NUM_SPLIT_ARGS 8
+#define NUM_SPLIT_ARGS 9
 #define NUM_REVOKE_ARGS 1
 #define ODIN 1
 
@@ -49,6 +49,7 @@ sched_copy_to_buffer(seL4_SchedParams params, int id)
     seL4_SetMR(5, (uint32_t) (params.relativeDeadline >> 32));
     seL4_SetMR(6, (uint32_t) params.relativeDeadline);
     seL4_SetMR(7, params.cbs);
+    seL4_SetMR(8, params.trigger);
 }
 
 static inline void
@@ -59,6 +60,7 @@ sched_copy_from_buffer(seL4_SchedParams *params, int *id)
     params->execution = ((uint64_t) seL4_GetMR(3) << 32) + seL4_GetMR(4);
     params->relativeDeadline = ((uint64_t) seL4_GetMR(5) << 32) + seL4_GetMR(6);
     params->cbs = seL4_GetMR(7);
+    params->trigger = seL4_GetMR(8);
 }
 
 
@@ -66,6 +68,9 @@ static inline seL4_SchedParams
 sched_create_params(uint64_t period, uint64_t relative_deadline, uint64_t execution, seL4_CBS cbs,
         seL4_TaskType trigger)
 {
+    /* this is currently what we support */
+    assert(relative_deadline == period);
+
     return (seL4_SchedParams) {
         .period = period,
         .relativeDeadline = relative_deadline,
@@ -81,7 +86,4 @@ vka_object_t sched_alloc_configure(seL4_SchedControl sched_control, vka_t  *vka,
 int sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context,
                     seL4_SchedParams params);
 
-/* Call seL4_SchedControl_Configure, multiply all params by khz (params assumed to be is milliseconds) */
-int sched_configure_khz(seL4_SchedControl sched_control, seL4_SchedContext sched_context,
-                    seL4_SchedParams params, uint32_t khz);
 #endif /* SCHED_H */
