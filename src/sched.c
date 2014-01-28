@@ -13,7 +13,6 @@ sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context
         return seL4_InvalidArgument;
     }
 
-    assert(params.trigger == seL4_TimeTriggered);
     /* leave params as ms */
     return seL4_SchedControl_Configure(sched_control, sched_context, params.period ,
             params.relativeDeadline, params.execution,
