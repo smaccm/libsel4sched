@@ -8,6 +8,8 @@
 #include <sched/sched.h>
 #include <sched/client.h>
 
+#include <utils/util.h>
+
 #include <vka/vka.h>
 #include <vka/capops.h>
 
@@ -34,11 +36,13 @@ sched_client_alloc_split(vka_t *vka, seL4_CPtr endpoint, int parent, seL4_SchedP
 {
     sched_t *sched = malloc(sizeof (sched_t));
     if (sched == NULL) {
+        LOG_ERROR("Malloc failed to allocate object of size %u\n", sizeof(sched_t));
         return NULL;
     }
 
     int error = vka_cspace_alloc(vka, &sched->cptr);
     if (error != 0) {
+        LOG_ERROR("Failed to allocate cslot\n");
         free(sched);
         return NULL;
     }
