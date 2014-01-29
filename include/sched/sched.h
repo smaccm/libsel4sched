@@ -23,7 +23,7 @@ typedef struct sched {
 #define NUM_REVOKE_ARGS 1
 #define ODIN 1
 
-#ifdef CONFIG_DEBUG_BUILD
+#ifdef CONFIG_USER_DEBUG_BUILD
 static inline void sched_print_params(seL4_SchedParams params)
 {
     LOG_INFO("p: %llu\t", params.period);
