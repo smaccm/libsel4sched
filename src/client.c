@@ -55,7 +55,7 @@ sched_client_alloc_split(vka_t *vka, seL4_CPtr endpoint, int parent, seL4_SchedP
     sched->id = sched_client_split(endpoint , parent, params, path);
 
     if (sched->id == -1) {
-        LOG_ERROR("Sched client split failed\n");
+        LOG_ERROR("Sched client split error\n");
         vka_cspace_free(vka, sched->cptr);
         free(sched);
         return NULL;
