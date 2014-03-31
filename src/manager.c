@@ -14,8 +14,19 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
                    seL4_CapData_t cap_data, uint32_t untyped_size, uint8_t priority)
 {
 
+
+    /* create a sched context */
+    vka_object_t sched_context = {0};
+    UNUSED int error = vka_alloc_sched_context(vka, &sched_context);
+    assert(error == 0);
+
+    error = seL4_SchedControl_Configure(seL4_CapSchedControl, sched_context.cptr,
+            100 * MS_IN_S, 100 * MS_IN_S, 100 * MS_IN_S, 1, seL4_HardCBS, seL4_TimeTriggered);
+    assert(error == 0);
+
     sel4utils_process_t process;
-    UNUSED int error = sel4utils_configure_process(&process, vka, vspace, MAX_PRIO, "time-manager");
+    error = sel4utils_configure_process(&process, vka, vspace, MAX_PRIO, sched_context.cptr,
+            "time-manager");
     assert(error == 0);
 
     /* copy the init sched_control cap into the addres space */
