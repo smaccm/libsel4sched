@@ -25,7 +25,7 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     assert(error == 0);
 
     sel4utils_process_t process;
-    error = sel4utils_configure_process(&process, vka, vspace, MAX_PRIO, sched_context.cptr,
+    error = sel4utils_configure_process(&process, vka, vspace, seL4_MaxPrio, sched_context.cptr,
             "time-manager");
     assert(error == 0);
 
@@ -62,9 +62,12 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     error = sel4utils_spawn_process(&process, vka, vspace, 1, argv, 1);
     assert(error == 0);
 
+    vka_object_t fault_handler_sc = sched_alloc_configure(seL4_CapSchedControl, vka, 
+            sched_create_params(100, 100, 100, seL4_HardCBS, seL4_TimeTriggered));
+
     sel4utils_thread_t thread;
     error = sel4utils_start_fault_handler(process.fault_endpoint.cptr, vka, vspace,
-            MAX_PRIO, cspace, cap_data, "time-manager", &thread);
+            seL4_MaxPrio, fault_handler_sc.cptr, cspace, cap_data, "time-manager", &thread);
     assert(error == 0);
 
     error = seL4_TCB_SetPriority(seL4_CapInitThreadTCB, priority);
