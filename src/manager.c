@@ -21,7 +21,7 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     assert(error == 0);
 
     error = seL4_SchedControl_Configure(seL4_CapSchedControl, sched_context.cptr,
-            100 * MS_IN_S, 100 * MS_IN_S, 100 * MS_IN_S, 1, seL4_HardCBS, seL4_TimeTriggered);
+            100llu * MS_IN_S, 100llu * MS_IN_S, 100llu * MS_IN_S, 1, seL4_HardCBS, seL4_TimeTriggered);
     assert(error == 0);
 
     sel4utils_process_t process;
@@ -59,12 +59,14 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     snprintf(size, 100, "%u", untyped_size);
     char *argv[2];
     argv[0] = size;
+    printf("Starting time manager\n");
     error = sel4utils_spawn_process(&process, vka, vspace, 1, argv, 1);
     assert(error == 0);
 
     vka_object_t fault_handler_sc = sched_alloc_configure(seL4_CapSchedControl, vka, 
-            sched_create_params(100, 100, 100, seL4_HardCBS, seL4_TimeTriggered));
+            sched_create_params(100llu * MS_IN_S, 100llu * MS_IN_S, 100llu * MS_IN_S, seL4_HardCBS, seL4_TimeTriggered));
 
+    printf("Starting fault handler\n");
     sel4utils_thread_t thread;
     error = sel4utils_start_fault_handler(process.fault_endpoint.cptr, vka, vspace,
             seL4_MaxPrio, fault_handler_sc.cptr, cspace, cap_data, "time-manager", &thread);
