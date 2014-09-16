@@ -80,6 +80,14 @@ sched_create_params(uint64_t period, uint64_t relative_deadline, uint64_t execut
     };
 }
 
+static inline seL4_SchedParams
+timeslice_params(uint64_t timeslice_us)
+{
+    return sched_create_params(timeslice_us, timeslice_us, timeslice_us, seL4_HardCBS,
+                               seL4_TimeTriggered);
+}
+
+
 vka_object_t sched_alloc_configure(seL4_SchedControl sched_control, vka_t  *vka, seL4_SchedParams params);
 
 /* Call seL4_SchedControl_Configure */
