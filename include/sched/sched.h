@@ -76,7 +76,25 @@ sched_create_params(uint64_t period, uint64_t relative_deadline, uint64_t execut
         .relativeDeadline = relative_deadline,
         .execution = execution,
         .cbs = cbs,
-        .trigger = trigger
+        .trigger = trigger,
+        .data = 0
+    };
+}
+
+static inline seL4_SchedParams
+sched_create_params_with_data(uint64_t period, uint64_t relative_deadline, uint64_t execution, seL4_CBS cbs,
+        seL4_TaskType trigger, uint32_t data)
+{
+    /* this is currently what we support */
+    assert(relative_deadline == period);
+
+    return (seL4_SchedParams) {
+        .period = period,
+        .relativeDeadline = relative_deadline,
+        .execution = execution,
+        .cbs = cbs,
+        .trigger = trigger,
+        .data = data
     };
 }
 

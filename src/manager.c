@@ -21,7 +21,8 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     assert(error == 0);
 
     error = seL4_SchedControl_Configure(seL4_CapSchedControl, sched_context.cptr,
-                                        100llu * MS_IN_S, 100llu * MS_IN_S, 100llu * MS_IN_S, 1, seL4_HardCBS, seL4_TimeTriggered);
+                                        100llu * MS_IN_S, 100llu * MS_IN_S, 100llu * MS_IN_S, 1, 
+                                        seL4_HardCBS, seL4_TimeTriggered, 0);
     assert(error == 0);
 
     sel4utils_process_t process;
