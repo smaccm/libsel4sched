@@ -15,9 +15,7 @@ sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context
 
     /* leave params as ms */
     return seL4_SchedControl_Configure(sched_control, sched_context, params.period ,
-                                       params.relativeDeadline, params.execution,
-                                       params.relativeDeadline / params.period, params.cbs, params.trigger, 
-                                       params.data);
+                                       params.deadline, params.budget, params.flags);
 }
 
 vka_object_t

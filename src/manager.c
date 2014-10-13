@@ -20,9 +20,8 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     UNUSED int error = vka_alloc_sched_context(vka, &sched_context);
     assert(error == 0);
 
-    error = seL4_SchedControl_Configure(seL4_CapSchedControl, sched_context.cptr,
-                                        100llu * MS_IN_S, 100llu * MS_IN_S, 100llu * MS_IN_S, 1, 
-                                        seL4_HardCBS, seL4_TimeTriggered, 0);
+    
+    error = sched_configure(seL4_CapSchedControl, sched_context.cptr, timeslice_params(100llu * US_IN_S)); 
     assert(error == 0);
 
     sel4utils_process_t process;

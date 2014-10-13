@@ -27,9 +27,13 @@ typedef struct sched {
 static inline void sched_print_params(seL4_SchedParams params)
 {
     LOG_INFO("p: %llu\t", params.period);
-    LOG_INFO("d: %llu\t", params.relativeDeadline);
-    LOG_INFO("e: %llu\t", params.execution);
-    LOG_INFO("cbs: %s\n", params.cbs == seL4_HardCBS ? "Hard" : "Soft");
+    LOG_INFO("d: %llu\t", params.deadline);
+    LOG_INFO("e: %llu\t", params.budget);
+    LOG_INFO("cbs: %s\n", seL4_SchedFlags_get_cbs(params.flags) == seL4_HardCBS ? "Hard" : "Soft");
+    LOG_INFO("trigger: %s\n", seL4_SchedFlags_get_trigger(params.flags) == seL4_TimeTriggered ? 
+            "Time triggered" : "Event triggered");
+    LOG_INFO("data: %x\n", seL4_SchedFlags_get_data(params.flags));
+    
 }
 #else
 #define sched_print_params(x)
@@ -44,12 +48,11 @@ sched_copy_to_buffer(seL4_SchedParams params, int id)
     seL4_SetMR(0, id);
     seL4_SetMR(1, (uint32_t) (params.period >> 32));
     seL4_SetMR(2, (uint32_t) params.period);
-    seL4_SetMR(3, (uint32_t) (params.execution >> 32));
-    seL4_SetMR(4, (uint32_t) params.execution);
-    seL4_SetMR(5, (uint32_t) (params.relativeDeadline >> 32));
-    seL4_SetMR(6, (uint32_t) params.relativeDeadline);
-    seL4_SetMR(7, params.cbs);
-    seL4_SetMR(8, params.trigger);
+    seL4_SetMR(3, (uint32_t) (params.budget >> 32));
+    seL4_SetMR(4, (uint32_t) params.budget);
+    seL4_SetMR(5, (uint32_t) (params.deadline >> 32));
+    seL4_SetMR(6, (uint32_t) params.deadline);
+    seL4_SetMR(7, params.flags.words[0]);
 }
 
 static inline void
@@ -57,44 +60,39 @@ sched_copy_from_buffer(seL4_SchedParams *params, int *id)
 {
     *id = seL4_GetMR(0);
     params->period = ((uint64_t) seL4_GetMR(1) << 32) + seL4_GetMR(2);
-    params->execution = ((uint64_t) seL4_GetMR(3) << 32) + seL4_GetMR(4);
-    params->relativeDeadline = ((uint64_t) seL4_GetMR(5) << 32) + seL4_GetMR(6);
-    params->cbs = seL4_GetMR(7);
-    params->trigger = seL4_GetMR(8);
+    params->budget = ((uint64_t) seL4_GetMR(3) << 32) + seL4_GetMR(4);
+    params->deadline = ((uint64_t) seL4_GetMR(5) << 32) + seL4_GetMR(6);
+    params->flags.words[0] = seL4_GetMR(7);
 }
 
 
 static inline seL4_SchedParams
-sched_create_params(uint64_t period, uint64_t relative_deadline, uint64_t execution, seL4_CBS cbs,
+sched_create_params(uint64_t period, uint64_t deadline, uint64_t budget, seL4_CBS cbs,
         seL4_TaskType trigger)
 {
     /* this is currently what we support */
-    assert(relative_deadline == period);
+    assert(deadline == period);
 
     return (seL4_SchedParams) {
         .period = period,
-        .relativeDeadline = relative_deadline,
-        .execution = execution,
-        .cbs = cbs,
-        .trigger = trigger,
-        .data = 0
+        .deadline = deadline,
+        .budget = budget,
+        .flags = seL4_SchedFlags_new(trigger, cbs, 0)
     };
 }
 
 static inline seL4_SchedParams
-sched_create_params_with_data(uint64_t period, uint64_t relative_deadline, uint64_t execution, seL4_CBS cbs,
+sched_create_params_with_data(uint64_t period, uint64_t deadline, uint64_t budget, seL4_CBS cbs,
         seL4_TaskType trigger, uint32_t data)
 {
     /* this is currently what we support */
-    assert(relative_deadline == period);
+    assert(deadline == period);
 
     return (seL4_SchedParams) {
         .period = period,
-        .relativeDeadline = relative_deadline,
-        .execution = execution,
-        .cbs = cbs,
-        .trigger = trigger,
-        .data = data
+        .deadline = deadline,
+        .budget = budget,
+        .flags = seL4_SchedFlags_new(trigger, cbs, data)
     };
 }
 
