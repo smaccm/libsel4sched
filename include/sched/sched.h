@@ -24,7 +24,7 @@ typedef struct sched {
 #define ODIN 1
 
 #ifdef CONFIG_USER_DEBUG_BUILD
-static inline void sched_print_params(seL4_SchedParams params)
+static inline void sched_print_params(seL4_SchedParams_t params)
 {
     LOG_INFO("p: %llu\t", params.period);
     LOG_INFO("d: %llu\t", params.deadline);
@@ -43,7 +43,7 @@ static inline void sched_print_params(seL4_SchedParams params)
 void sched_set_timer_khz(uint32_t freq);
 
 static inline void
-sched_copy_to_buffer(seL4_SchedParams params, int id)
+sched_copy_to_buffer(seL4_SchedParams_t params, int id)
 {
     seL4_SetMR(0, id);
     seL4_SetMR(1, (uint32_t) (params.period >> 32));
@@ -56,7 +56,7 @@ sched_copy_to_buffer(seL4_SchedParams params, int id)
 }
 
 static inline void
-sched_copy_from_buffer(seL4_SchedParams *params, int *id)
+sched_copy_from_buffer(seL4_SchedParams_t *params, int *id)
 {
     *id = seL4_GetMR(0);
     params->period = ((uint64_t) seL4_GetMR(1) << 32) + seL4_GetMR(2);
@@ -66,14 +66,14 @@ sched_copy_from_buffer(seL4_SchedParams *params, int *id)
 }
 
 
-static inline seL4_SchedParams
+static inline seL4_SchedParams_t
 sched_create_params(uint64_t period, uint64_t deadline, uint64_t budget, seL4_CBS cbs,
         seL4_TaskType trigger)
 {
     /* this is currently what we support */
     assert(deadline == period);
 
-    return (seL4_SchedParams) {
+    return (seL4_SchedParams_t) {
         .period = period,
         .deadline = deadline,
         .budget = budget,
@@ -81,14 +81,14 @@ sched_create_params(uint64_t period, uint64_t deadline, uint64_t budget, seL4_CB
     };
 }
 
-static inline seL4_SchedParams
+static inline seL4_SchedParams_t
 sched_create_params_with_data(uint64_t period, uint64_t deadline, uint64_t budget, seL4_CBS cbs,
         seL4_TaskType trigger, uint32_t data)
 {
     /* this is currently what we support */
     assert(deadline == period);
 
-    return (seL4_SchedParams) {
+    return (seL4_SchedParams_t) {
         .period = period,
         .deadline = deadline,
         .budget = budget,
@@ -96,7 +96,7 @@ sched_create_params_with_data(uint64_t period, uint64_t deadline, uint64_t budge
     };
 }
 
-static inline seL4_SchedParams
+static inline seL4_SchedParams_t
 timeslice_params(uint64_t timeslice_us)
 {
     return sched_create_params(timeslice_us, timeslice_us, timeslice_us, seL4_HardCBS,
@@ -104,10 +104,10 @@ timeslice_params(uint64_t timeslice_us)
 }
 
 
-vka_object_t sched_alloc_configure(seL4_SchedControl sched_control, vka_t  *vka, seL4_SchedParams params);
+vka_object_t sched_alloc_configure(seL4_SchedControl sched_control, vka_t  *vka, seL4_SchedParams_t params);
 
 /* Call seL4_SchedControl_Configure */
 int sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context,
-                    seL4_SchedParams params);
+                    seL4_SchedParams_t params);
 
 #endif /* SCHED_H */

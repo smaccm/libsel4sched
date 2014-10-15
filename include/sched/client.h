@@ -25,7 +25,7 @@
  *
  * @return the id of the new sched object. -1 on failure.
  */
-int sched_client_split(seL4_CPtr endpoint, int parent, seL4_SchedParams params, cspacepath_t dest);
+int sched_client_split(seL4_CPtr endpoint, int parent, seL4_SchedParams_t params, cspacepath_t dest);
 
 /**
  * As above, but perform the allocations for the user.
@@ -39,7 +39,7 @@ int sched_client_split(seL4_CPtr endpoint, int parent, seL4_SchedParams params, 
  * @return NULL on failure, an initialised sched object otherwise (with cslot and id).
  */
 sched_t *sched_client_alloc_split(vka_t *vka, seL4_CPtr endpoint,
-                                  int32_t parent, seL4_SchedParams params);
+                                  int32_t parent, seL4_SchedParams_t params);
 
 /**
  * IPC the sched manager to revoke the children of a reservation.

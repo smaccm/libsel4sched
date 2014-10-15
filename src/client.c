@@ -14,7 +14,7 @@
 #include <vka/capops.h>
 
 int
-sched_client_split(seL4_CPtr endpoint, int parent, seL4_SchedParams params, cspacepath_t dest)
+sched_client_split(seL4_CPtr endpoint, int parent, seL4_SchedParams_t params, cspacepath_t dest)
 {
     /* put the path to the cslot into the ipc buffer */
     seL4_SetCapReceivePath(dest.root, dest.capPtr, dest.capDepth);
@@ -32,7 +32,7 @@ sched_client_split(seL4_CPtr endpoint, int parent, seL4_SchedParams params, cspa
 }
 
 sched_t *
-sched_client_alloc_split(vka_t *vka, seL4_CPtr endpoint, int parent, seL4_SchedParams params)
+sched_client_alloc_split(vka_t *vka, seL4_CPtr endpoint, int parent, seL4_SchedParams_t params)
 {
     sched_t *sched = malloc(sizeof (sched_t));
     if (sched == NULL) {

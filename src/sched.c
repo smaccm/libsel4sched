@@ -6,7 +6,7 @@
 
 int
 sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context,
-                seL4_SchedParams params)
+                seL4_SchedParams_t params)
 {
     if (params.period == 0) {
         LOG_ERROR("Period must be > 0\n");
@@ -19,7 +19,7 @@ sched_configure(seL4_SchedControl sched_control, seL4_SchedContext sched_context
 }
 
 vka_object_t
-sched_alloc_configure(seL4_SchedControl sched_control, vka_t *vka, seL4_SchedParams params)
+sched_alloc_configure(seL4_SchedControl sched_control, vka_t *vka, seL4_SchedParams_t params)
 {
     vka_object_t sc = {0};
 
