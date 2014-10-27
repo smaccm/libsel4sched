@@ -66,7 +66,8 @@ start_time_manager(vka_t *vka, vspace_t *vspace, seL4_CPtr cspace,
     printf("Starting fault handler\n");
     sel4utils_thread_t thread;
     error = sel4utils_start_fault_handler(process.fault_endpoint.cptr, vka, vspace,
-                                          seL4_MaxPrio, cspace, cap_data, "time-manager", &thread);
+                                          seL4_MaxPrio, cspace, cap_data, "time-manager", 
+                                          seL4_CapSchedControl, &thread);
     assert(error == 0);
 
     error = seL4_TCB_SetPriority(seL4_CapInitThreadTCB, priority);
